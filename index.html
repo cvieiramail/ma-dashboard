@@ -30,6 +30,21 @@
     .fact-row.hedged{border-left-color:#f59e0b;}
     .tag-hedged{background:#fef3c7;color:#92400e;font-size:.65rem;padding:1px 6px;border-radius:4px;}
     .section-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8;margin-bottom:10px;}
+    /* ── MOBILE ── */
+    @media(max-width:640px){
+      #cli-bar{display:none;}
+      .reg-desktop{display:none!important;}
+      .reg-mobile{display:block!important;}
+      .news-row{padding:10px 12px!important;}
+      .news-meta{width:auto!important;min-width:0;}
+      .news-layout{flex-direction:column!important;gap:4px!important;}
+      .news-date-block{display:flex;flex-direction:row;align-items:center;gap:6px;}
+      .kpi-box{padding:10px 12px!important;}
+      .kpi-val{font-size:1.05rem!important;}
+    }
+    @media(min-width:641px){
+      .reg-mobile{display:none!important;}
+    }
   </style>
 </head>
 <body class="min-h-screen">
@@ -47,7 +62,7 @@
     <div class="flex items-center gap-4">
       <div class="text-right hidden sm:block">
         <div class="text-slate-500 text-xs">Last updated</div>
-        <div class="text-slate-200 text-sm font-semibold">March 08, 2026 at 11:42</div>
+        <div class="text-slate-200 text-sm font-semibold">March 08, 2026 at 19:51</div>
       </div>
       <div class="relative">
         <input type="search" id="search" placeholder="Search..."
@@ -60,7 +75,7 @@
 </header>
 
 <!-- ═══ CLI BAR ═══ -->
-<div style="background:#0f172a;border-bottom:1px solid #1e293b;" class="px-6 py-2.5">
+<div id="cli-bar" style="background:#0f172a;border-bottom:1px solid #1e293b;" class="px-6 py-2.5">
   <div class="max-w-7xl mx-auto flex items-center gap-2 text-xs flex-wrap">
     <span class="text-yellow-400 font-bold">$</span>
     <code class="text-emerald-400">python dashboard.py update</code>
@@ -74,7 +89,7 @@
 </div>
 
 <!-- ═══ CARDS ═══ -->
-<main id="cards" class="max-w-7xl mx-auto px-6 py-6 space-y-6"></main>
+<main id="cards" class="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6"></main>
 <div id="no-results" class="hidden text-center py-20 text-slate-400">No deals match your search.</div>
 
 <script>
@@ -652,7 +667,7 @@ function financingHTML(fs){
       </div>
     </div>
     ${bridgeBanner}
-    <div style="display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));min-width:0;">${cards}</div>`;
+    <div style="display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));min-width:0;">${cards}</div>`;
 }
 
 /* ── REGULATORY TABLE ── */
@@ -660,37 +675,58 @@ function regulatoryHTML(tracker){
   if(!tracker||!tracker.length){
     return '<p class="text-slate-400 italic text-sm py-2">No regulatory information reported in available sources.</p>';
   }
-  const rows = tracker.map(r=>{
-    const src = r.source_url
-      ? `<a href="${esc(r.source_url)}" target="_blank" rel="noopener noreferrer"
-            class="text-blue-600 hover:underline text-xs font-medium">Source →</a>`
-      : '';
-    const notInSrcBadge = r.not_in_sources
+
+  const notInSrcBadge = r =>
+    r.not_in_sources
       ? `<span style="display:inline-block;font-size:.6rem;background:#f3f4f6;color:#6b7280;border:1px solid #d1d5db;padding:1px 7px;border-radius:4px;margin-top:5px;">Standard process · not confirmed in sources</span>`
       : '';
-    return `
-      <tr class="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
-        <td class="py-3 px-4 text-sm font-semibold text-slate-700 whitespace-nowrap">${esc(r.jurisdiction)}</td>
-        <td class="py-3 px-4 text-sm text-slate-600 whitespace-nowrap">${esc(r.body)}</td>
-        <td class="py-3 px-4">${statusBadge(r.status)}</td>
-        <td class="py-3 px-4 text-sm text-slate-600 leading-snug">
-          <div>${esc(r.notes||'')}</div>
-          ${notInSrcBadge}
-        </td>
-        <td class="py-3 px-4 whitespace-nowrap">
-          ${r.source_date ? `<div class="text-xs text-slate-400 mb-1">${esc(r.source_date)}</div>` : ''}
-          ${src || (r.not_in_sources ? '<span class="text-xs text-slate-300">—</span>' : '')}
-        </td>
-      </tr>`;
-  }).join('');
+  const srcLink = r =>
+    r.source_url
+      ? `<a href="${esc(r.source_url)}" target="_blank" rel="noopener noreferrer"
+              class="text-blue-600 hover:underline text-xs font-medium">Source →</a>`
+      : (r.not_in_sources ? '<span class="text-xs text-slate-300">—</span>' : '');
+
+  /* ── DESKTOP: table ── */
+  const rows = tracker.map(r=>`
+    <tr class="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
+      <td class="py-3 px-4 text-sm font-semibold text-slate-700 whitespace-nowrap">${esc(r.jurisdiction)}</td>
+      <td class="py-3 px-4 text-sm text-slate-600 whitespace-nowrap">${esc(r.body)}</td>
+      <td class="py-3 px-4">${statusBadge(r.status)}</td>
+      <td class="py-3 px-4 text-sm text-slate-600 leading-snug">
+        <div>${esc(r.notes||'')}</div>${notInSrcBadge(r)}
+      </td>
+      <td class="py-3 px-4 whitespace-nowrap">
+        ${r.source_date ? `<div class="text-xs text-slate-400 mb-1">${esc(r.source_date)}</div>` : ''}
+        ${srcLink(r)}
+      </td>
+    </tr>`).join('');
+
+  /* ── MOBILE: cards ── */
+  const mCards = tracker.map(r=>`
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px;">
+        <div style="min-width:0;">
+          <div style="font-size:.8rem;font-weight:700;color:#0f172a;line-height:1.2;">${esc(r.body)}</div>
+          <div style="font-size:.68rem;color:#94a3b8;margin-top:2px;">${esc(r.jurisdiction)}</div>
+        </div>
+        <div style="flex-shrink:0;">${statusBadge(r.status)}</div>
+      </div>
+      <div style="font-size:.75rem;color:#475569;line-height:1.5;word-break:break-word;">${esc(r.notes||'')}</div>
+      ${notInSrcBadge(r)}
+      ${r.source_date||r.source_url ? `
+        <div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          ${r.source_date ? `<span style="font-size:.65rem;color:#94a3b8;">${esc(r.source_date)}</span>` : ''}
+          ${srcLink(r)}
+        </div>` : ''}
+    </div>`).join('');
 
   return `
-    <div class="overflow-x-auto rounded-xl border border-slate-200">
+    <div class="reg-desktop overflow-x-auto rounded-xl border border-slate-200">
       <table class="w-full min-w-[600px]">
         <thead>
           <tr style="background:#f8fafc;border-bottom:2px solid #e2e8f0;">
             <th class="py-2.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Jurisdiction</th>
-            <th class="py-2.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Regulator / Body</th>
+            <th class="py-2.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Regulator</th>
             <th class="py-2.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
             <th class="py-2.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Notes</th>
             <th class="py-2.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Source</th>
@@ -698,7 +734,8 @@ function regulatoryHTML(tracker){
         </thead>
         <tbody class="bg-white">${rows}</tbody>
       </table>
-    </div>`;
+    </div>
+    <div class="reg-mobile" style="display:none;">${mCards}</div>`;
 }
 
 /* ── TIMELINE ── */
@@ -761,14 +798,16 @@ function newsHTML(news){
   return news.map(n=>{
     const hedged = n.hedged ? '<span class="tag-hedged ml-1.5">Uncertain</span>' : '';
     return `
-      <div class="news-row px-5 py-3.5">
-        <div class="flex items-start gap-3">
-          <div class="flex-shrink-0 text-right" style="width:64px;">
-            <div class="text-xs font-bold text-slate-500">${fmt(n.published_date)}</div>
-            <div class="text-xs text-slate-400 mt-0.5 leading-tight">${esc(n.article_source||'')}</div>
+      <div class="news-row px-4 py-3 sm:px-5 sm:py-3.5">
+        <div class="news-layout flex items-start gap-3">
+          <div class="news-meta flex-shrink-0 text-right" style="width:64px;">
+            <div class="news-date-block">
+              <div class="text-xs font-bold text-slate-500">${fmt(n.published_date)}</div>
+              <div class="text-xs text-slate-400 mt-0.5 leading-tight">${esc(n.article_source||'')}</div>
+            </div>
           </div>
           <div class="flex-1 min-w-0">
-            <p class="text-sm text-slate-800 leading-relaxed">${esc(n.fact)}${hedged}</p>
+            <p class="text-sm text-slate-800 leading-relaxed" style="word-break:break-word;">${esc(n.fact)}${hedged}</p>
             ${n.article_url ? `<a href="${esc(n.article_url)}" target="_blank" rel="noopener noreferrer"
                 class="text-xs text-blue-600 hover:underline font-medium mt-1 inline-block">View article →</a>` : ''}
           </div>
@@ -781,12 +820,12 @@ function newsHTML(news){
 function section(title, icon, content, accentColor){
   return `
     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-      <div class="flex items-center gap-3 px-6 py-4 border-b border-slate-100"
+      <div class="flex items-center gap-3 px-4 py-3 sm:px-6 sm:py-4 border-b border-slate-100"
            style="border-left:4px solid ${accentColor||'#e2e8f0'}">
         <span class="text-lg">${icon}</span>
-        <h3 class="font-bold text-slate-800">${title}</h3>
+        <h3 class="font-bold text-slate-800 text-sm sm:text-base">${title}</h3>
       </div>
-      <div class="px-6 py-4">${content}</div>
+      <div class="px-3 py-3 sm:px-6 sm:py-4">${content}</div>
     </div>`;
 }
 
@@ -809,26 +848,26 @@ function cardHTML(result, idx){
   /* KPI boxes */
   const kpiBoxes = `
     <div class="kpi-box">
-      <div style="color:rgba(255,255,255,.5);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Enterprise Value</div>
-      <div style="color:#fff;font-size:1.4rem;font-weight:900;line-height:1.1;">${esc(d.deal_value||kp.deal_value||'—')}</div>
-      ${d.announced_date ? `<div style="color:rgba(255,255,255,.4);font-size:.7rem;margin-top:4px;">Announced ${esc(d.announced_date)}</div>` : ''}
+      <div style="color:rgba(255,255,255,.5);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Enterprise Value</div>
+      <div class="kpi-val" style="color:#fff;font-size:1.4rem;font-weight:900;line-height:1.1;">${esc(d.deal_value||kp.deal_value||'—')}</div>
+      ${d.announced_date ? `<div style="color:rgba(255,255,255,.4);font-size:.65rem;margin-top:4px;">Announced ${esc(d.announced_date)}</div>` : ''}
     </div>
     <div class="kpi-box">
-      <div style="color:rgba(255,255,255,.5);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Expected Close</div>
-      <div style="color:#fff;font-size:1.4rem;font-weight:900;line-height:1.1;">${esc(kp.expected_close||(tl&&tl.length?tl[tl.length-1].date:null)||'—')}</div>
-      ${kp.deal_type ? `<div style="color:rgba(255,255,255,.4);font-size:.7rem;margin-top:4px;">${esc(kp.deal_type)}</div>` : ''}
+      <div style="color:rgba(255,255,255,.5);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Expected Close</div>
+      <div class="kpi-val" style="color:#fff;font-size:1.4rem;font-weight:900;line-height:1.1;">${esc(kp.expected_close||(tl&&tl.length?tl[tl.length-1].date:null)||'—')}</div>
+      ${kp.deal_type ? `<div style="color:rgba(255,255,255,.4);font-size:.65rem;margin-top:4px;">${esc(kp.deal_type)}</div>` : ''}
     </div>
     ${regTotal ? `
     <div class="kpi-box">
-      <div style="color:rgba(255,255,255,.5);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Regulatory</div>
-      <div style="display:flex;align-items:baseline;gap:6px;">
-        <span style="color:#4ade80;font-size:1.4rem;font-weight:900;line-height:1.1;">${regCleared}</span>
-        <span style="color:rgba(255,255,255,.4);font-size:.8rem;">cleared</span>
+      <div style="color:rgba(255,255,255,.5);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Regulatory</div>
+      <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;">
+        <span class="kpi-val" style="color:#4ade80;font-size:1.4rem;font-weight:900;line-height:1.1;">${regCleared}</span>
+        <span style="color:rgba(255,255,255,.4);font-size:.75rem;">cleared</span>
         <span style="color:rgba(255,255,255,.2);">/</span>
-        <span style="color:#fbbf24;font-size:1.4rem;font-weight:900;line-height:1.1;">${regPending}</span>
-        <span style="color:rgba(255,255,255,.4);font-size:.8rem;">pending</span>
+        <span class="kpi-val" style="color:#fbbf24;font-size:1.4rem;font-weight:900;line-height:1.1;">${regPending}</span>
+        <span style="color:rgba(255,255,255,.4);font-size:.75rem;">pending</span>
       </div>
-      <div style="color:rgba(255,255,255,.4);font-size:.7rem;margin-top:4px;">${regTotal} jurisdictions tracked</div>
+      <div style="color:rgba(255,255,255,.4);font-size:.65rem;margin-top:4px;">${regTotal} jurisdictions tracked</div>
     </div>` : ''}`;
 
   /* sources strip */
@@ -845,7 +884,7 @@ function cardHTML(result, idx){
          data-search="${esc((d.name+' '+d.buyer+' '+d.target+' '+(d.sector||'')).toLowerCase())}">
 
       <!-- ▸ HEADER -->
-      <div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 100%);" class="px-6 py-5">
+      <div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 100%);" class="px-4 py-4 sm:px-6 sm:py-5">
         <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
           <div>
             <div class="flex flex-wrap items-center gap-2">
@@ -867,7 +906,7 @@ function cardHTML(result, idx){
       </div>
 
       <!-- ▸ BODY SECTIONS -->
-      <div class="space-y-4 p-4" style="background:#f0f2f5;">
+      <div class="space-y-3 p-3 sm:space-y-4 sm:p-4" style="background:#f0f2f5;">
 
         ${section('Financing Structure', '💰', financingHTML(fs||null), '#2563eb')}
 
