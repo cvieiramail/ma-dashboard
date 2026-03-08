@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.DS_Store
+cron.log
+nohup.out
+ma-dashboard.zip

@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M&A Deal Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *{font-family:'Inter',sans-serif;}
+    body{background:#f0f2f5;}
+    .deal-card{animation:fadeUp .35s ease;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .kpi-box{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 20px;}
+    .status-cleared{background:#dcfce7;color:#15803d;}
+    .status-favorable{background:#dbeafe;color:#1e40af;}
+    .status-pending{background:#fef9c3;color:#854d0e;}
+    .status-risk{background:#ffedd5;color:#9a3412;}
+    .status-blocked{background:#fee2e2;color:#991b1b;}
+    .status-required{background:#f3e8ff;color:#6b21a8;}
+    .ms-done{background:#2563eb;border-color:#2563eb;}
+    .ms-next{background:#fff;border-color:#2563eb;}
+    .ms-future{background:#fff;border-color:#94a3b8;}
+    .fin-bar-segment{display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#fff;min-width:40px;transition:opacity .2s;}
+    .fin-bar-segment:hover{opacity:.85;}
+    .news-row:hover{background:#f8fafc;}
+    .news-row{border-bottom:1px solid #f1f5f9;}
+    .news-row:last-child{border-bottom:none;}
+    .fact-row{border-left:3px solid transparent;}
+    .fact-row.hedged{border-left-color:#f59e0b;}
+    .tag-hedged{background:#fef3c7;color:#92400e;font-size:.65rem;padding:1px 6px;border-radius:4px;}
+    .section-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8;margin-bottom:10px;}
+  </style>
+</head>
+<body class="min-h-screen">
+
+<!-- ═══ HEADER ═══ -->
+<header style="background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);" class="shadow-2xl">
+  <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center text-white font-black text-sm">M</div>
+        <h1 class="text-white text-xl font-bold tracking-tight">M&A Deal Tracker</h1>
+      </div>
+      <p class="text-slate-500 text-xs mt-1 ml-11">Fact-based · Sources cited · No inference</p>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="text-right hidden sm:block">
+        <div class="text-slate-500 text-xs">Last updated</div>
+        <div class="text-slate-200 text-sm font-semibold">March 08, 2026 at 11:42</div>
+      </div>
+      <div class="relative">
+        <input type="search" id="search" placeholder="Search..."
+               class="bg-white/10 border border-white/20 text-white placeholder-slate-500
+                      rounded-lg px-3 py-2 text-sm w-44 focus:outline-none focus:border-blue-400 focus:bg-white/15">
+      </div>
+      <span id="deal-badge" class="bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap"></span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ CLI BAR ═══ -->
+<div style="background:#0f172a;border-bottom:1px solid #1e293b;" class="px-6 py-2.5">
+  <div class="max-w-7xl mx-auto flex items-center gap-2 text-xs flex-wrap">
+    <span class="text-yellow-400 font-bold">$</span>
+    <code class="text-emerald-400">python dashboard.py update</code>
+    <span class="text-slate-600">·</span>
+    <code class="text-emerald-400">python dashboard.py add</code>
+    <span class="text-slate-600">·</span>
+    <code class="text-emerald-400">python dashboard.py delete</code>
+    <span class="text-slate-600">·</span>
+    <code class="text-emerald-400">python dashboard.py list</code>
+  </div>
+</div>
+
+<!-- ═══ CARDS ═══ -->
+<main id="cards" class="max-w-7xl mx-auto px-6 py-6 space-y-6"></main>
+<div id="no-results" class="hidden text-center py-20 text-slate-400">No deals match your search.</div>
+
+<script>
+const DATA = [
+  {
+    "deal": {
+      "id": "paramount-wbd",
+      "name": "Paramount Skydance / Warner Bros. Discovery",
+      "buyer": "Paramount Skydance",
+      "target": "Warner Bros. Discovery",
+      "deal_value": "$110B enterprise · $31/share cash",
+      "announced_date": "Feb 27, 2026",
+      "sector": "Media & Entertainment",
+      "search_queries": [
+        "Paramount Skydance Warner Bros Discovery acquisition merger 2026",
+        "WBD Paramount Skydance regulatory antitrust 2026",
+        "Warner Bros Discovery closing timeline shareholder vote"
+      ]
+    },
+    "kpis": {
+      "deal_value": "$110B enterprise",
+      "expected_close": "Q3 2026",
+      "deal_type": "All-Cash · $31.00/share"
+    },
+    "financing_structure": {
+      "total_label": "$110B enterprise value",
+      "bank_pct_disclosed": false,
+      "components": [
+        {
+          "label": "Equity",
+          "sublabel": "New Class B Shares @ $16.02/share · no financing conditions",
+          "amount": "$47B",
+          "pct": 43,
+          "color": "#2563eb",
+          "parties": [
+            "Ellison Family",
+            "RedBird Capital Partners"
+          ],
+          "notes": "New Class B shares issued to Ellison Family and RedBird Capital Partners. No financing conditions attached. (NBC News, Feb 27, 2026)"
+        },
+        {
+          "label": "Debt",
+          "sublabel": "$39B new debt + $15B WBD existing bridge refinancing",
+          "amount": "$54B",
+          "pct": 57,
+          "color": "#1e3a5f",
+          "banks": [
+            {
+              "name": "Bank of America",
+              "pct": null,
+              "role": "Lender"
+            },
+            {
+              "name": "Citigroup",
+              "pct": null,
+              "role": "Lender"
+            },
+            {
+              "name": "Apollo",
+              "pct": null,
+              "role": "Lender"
+            }
+          ],
+          "notes": "Fully committed debt package. No financing conditions. $39B in new debt + $15B to refinance WBD's existing bridge facility. % split among lenders not publicly disclosed. Combined entity carries ~$79B net debt post-close. Credit agencies downgraded to 'junk' status. (Reuters, Mar 2, 2026)"
+        }
+      ]
+    },
+    "regulatory_tracker": [
+      {
+        "jurisdiction": "United States",
+        "body": "DOJ / HSR Act",
+        "status": "favorable",
+        "notes": "HSR 10-day waiting period expired after DOJ second request. Company stated: 'there is no statutory impediment in the U.S. to closing.' However, per Bloomberg (Mar 2), deal 'remains under active review by US antitrust officials' though odds of a legal challenge are described as 'low.' Netflix CLO stated HSR expiration 'does not signal DOJ approval' and Paramount is 'a long way' from securing all needed approvals.",
+        "source_url": "https://www.bloomberg.com/news/articles/2026-03-02/paramount-deal-still-under-us-review-with-challenge-unlikely",
+        "source_date": "Mar 2–3, 2026"
+      },
+      {
+        "jurisdiction": "United States",
+        "body": "FCC",
+        "status": "favorable",
+        "notes": "FCC Chairman Brendan Carr told CNBC the deal is 'cleaner' than Netflix's proposal and will be approved 'pretty quickly.' Carr said Netflix 'would have a very difficult path' getting regulatory approval compared to Paramount's deal.",
+        "source_url": "https://www.cnbc.com/2026/03/03/fcc-chair-brendan-carr-wbd-paramount-merger-deal-netflix.html",
+        "source_date": "Mar 3, 2026"
+      },
+      {
+        "jurisdiction": "United States — State AGs",
+        "body": "Multi-State Attorneys General",
+        "status": "risk",
+        "notes": "California AG Rob Bonta confirmed California will conduct its own independent antitrust review and confirmed 'interest from other states' in the deal. Coalition led by Center for American Progress Action Fund wrote letter to state AGs calling for legal challenge, arguing merger reduces major film studios from 5 to 4. Former DOJ antitrust chief Bill Baer: 'a combined lawsuit by state attorneys general presents a real threat.'",
+        "source_url": "https://deadline.com/2026/03/paramount-warner-bros-state-attorneys-general-1236746176/",
+        "source_date": "Mar 6, 2026"
+      },
+      {
+        "jurisdiction": "European Union",
+        "body": "European Commission (DG COMP)",
+        "status": "pending",
+        "notes": "EU regulatory approval confirmed as required in sources. Reviewing body (European Commission, DG COMP) is standard for EU merger control; not named by name in available sources. No timeline or status reported.",
+        "source_url": "https://www.theguardian.com/media/2026/mar/05/paramount-warner-bros-mega-merger-antitrust-threats",
+        "source_date": "Mar 5, 2026",
+        "not_in_sources": true
+      },
+      {
+        "jurisdiction": "United Kingdom",
+        "body": "CMA",
+        "status": "pending",
+        "notes": "UK regulatory approval confirmed as required in sources. Reviewing body (Competition and Markets Authority) is standard for UK merger control; not named by name in available sources. No timeline or status reported.",
+        "source_url": "https://www.theguardian.com/media/2026/mar/05/paramount-warner-bros-mega-merger-antitrust-threats",
+        "source_date": "Mar 5, 2026",
+        "not_in_sources": true
+      }
+    ],
+    "timeline_milestones": [
+      {
+        "label": "Deal Signed",
+        "date": "Feb 27, 2026",
+        "status": "completed"
+      },
+      {
+        "label": "Shareholder Vote",
+        "date": "Early Spring 2026",
+        "status": "upcoming"
+      },
+      {
+        "label": "Regulatory Close",
+        "date": "TBD",
+        "status": "future"
+      },
+      {
+        "label": "Expected Close",
+        "date": "Q3 2026",
+        "status": "future"
+      }
+    ],
+    "facts": {
+      "regulatory": [],
+      "closing_timeline": [
+        {
+          "fact": "Transaction expected to close Q3 2026. Shareholder vote expected in early spring 2026.",
+          "hedged": false,
+          "article_source": "NBC News",
+          "article_url": "https://www.nbcnews.com/business/media/warner-bros-discovery-signs-merger-agreement-paramount-skydance-rcna261035",
+          "published_date": "Fri, 27 Feb 2026"
+        },
+        {
+          "fact": "If not closed by September 30, 2026, WBD shareholders receive a $0.25 per share quarterly 'ticking fee.' Paramount Skydance included a $7 billion reverse termination fee if regulators block the deal.",
+          "hedged": false,
+          "article_source": "NBC News",
+          "article_url": "https://www.nbcnews.com/business/media/warner-bros-discovery-signs-merger-agreement-paramount-skydance-rcna261035",
+          "published_date": "Fri, 27 Feb 2026"
+        }
+      ],
+      "financing": [],
+      "latest_news": [
+        {
+          "fact": "Mar 6, 2026 — Coalition of public interest groups led by Center for American Progress Action Fund wrote letter to California AG Rob Bonta and other state AGs calling for legal challenge to the merger. Letter argues the combination reduces major film studios from 5 to 4. California AG Bonta confirmed California will conduct its own independent antitrust review and acknowledged 'interest from other states' in the deal.",
+          "hedged": false,
+          "article_source": "Deadline",
+          "article_url": "https://deadline.com/2026/03/paramount-warner-bros-state-attorneys-general-1236746176/",
+          "published_date": "Fri, 06 Mar 2026"
+        },
+        {
+          "fact": "Mar 5, 2026 — A March 4 Senate antitrust subcommittee hearing on the merger was canceled by Sen. Mike Lee (R-UT). Former DOJ antitrust chief Bill Baer warned 'a combined lawsuit by state attorneys general presents a real threat.'",
+          "hedged": false,
+          "article_source": "The Guardian",
+          "article_url": "https://www.theguardian.com/media/2026/mar/05/paramount-warner-bros-mega-merger-antitrust-threats",
+          "published_date": "Thu, 05 Mar 2026"
+        },
+        {
+          "fact": "Mar 3, 2026 — FCC Chairman Brendan Carr told CNBC Paramount's deal is 'cleaner' than Netflix's and will be approved 'pretty quickly.' HSR 10-day waiting period expired; company stated 'there is no statutory impediment in the U.S. to closing.' Netflix CLO responded that HSR expiration 'does not signal DOJ approval' and Paramount is 'a long way' from securing all needed approvals.",
+          "hedged": false,
+          "article_source": "CNBC / Bloomberg",
+          "article_url": "https://www.cnbc.com/2026/03/03/fcc-chair-brendan-carr-wbd-paramount-merger-deal-netflix.html",
+          "published_date": "Tue, 03 Mar 2026"
+        },
+        {
+          "fact": "Mar 2, 2026 — Bloomberg: deal 'remains under active review by US antitrust officials,' though odds of legal challenge described as 'low.' Reuters confirmed combined entity will carry ~$79B net debt; credit agencies downgraded to 'junk' status.",
+          "hedged": true,
+          "article_source": "Bloomberg / Reuters",
+          "article_url": "https://www.bloomberg.com/news/articles/2026-03-02/paramount-deal-still-under-us-review-with-challenge-unlikely",
+          "published_date": "Mon, 02 Mar 2026"
+        },
+        {
+          "fact": "Feb 27, 2026 — Warner Bros. Discovery signed merger agreement with Paramount Skydance. WBD's board determined Paramount's $110.9B revised offer was a superior proposal to Netflix's prior bid (Feb 26). WBD paid Netflix a $2.8B termination fee after Netflix declined to match. Deal includes $7B reverse termination fee if regulators block the merger, and a $0.25/share/quarter ticking fee if not closed by Sep 30, 2026.",
+          "hedged": false,
+          "article_source": "NBC News",
+          "article_url": "https://www.nbcnews.com/business/media/warner-bros-discovery-signs-merger-agreement-paramount-skydance-rcna261035",
+          "published_date": "Fri, 27 Feb 2026"
+        }
+      ]
+    },
+    "articles": [
+      {
+        "title": "Public Interest Groups Call For State AGs To Challenge Paramount-WBD",
+        "link": "https://deadline.com/2026/03/paramount-warner-bros-state-attorneys-general-1236746176/",
+        "source": "Deadline",
+        "published": "Fri, 06 Mar 2026"
+      },
+      {
+        "title": "Paramount-Warner Bros mega-merger could still face 'real threats'",
+        "link": "https://www.theguardian.com/media/2026/mar/05/paramount-warner-bros-mega-merger-antitrust-threats",
+        "source": "The Guardian",
+        "published": "Thu, 05 Mar 2026"
+      },
+      {
+        "title": "Fears mount at CNN and CBS News over merger",
+        "link": "https://www.latimes.com/entertainment-arts/business/story/2026-03-05/fears-mount-cnn-cbs-news-paramount-wbd-merger",
+        "source": "Los Angeles Times",
+        "published": "Thu, 05 Mar 2026"
+      },
+      {
+        "title": "FCC Chair: WBD-Paramount deal is 'cleaner' than Netflix's, will be approved 'quickly'",
+        "link": "https://www.cnbc.com/2026/03/03/fcc-chair-brendan-carr-wbd-paramount-merger-deal-netflix.html",
+        "source": "CNBC",
+        "published": "Tue, 03 Mar 2026"
+      },
+      {
+        "title": "Paramount's $110B Warner Bros. Deal Still Under US Antitrust Review",
+        "link": "https://www.bloomberg.com/news/articles/2026-03-02/paramount-deal-still-under-us-review-with-challenge-unlikely",
+        "source": "Bloomberg",
+        "published": "Mon, 02 Mar 2026"
+      },
+      {
+        "title": "Warner Bros. Discovery signs merger agreement with Paramount Skydance",
+        "link": "https://www.nbcnews.com/business/media/warner-bros-discovery-signs-merger-agreement-paramount-skydance-rcna261035",
+        "source": "NBC News",
+        "published": "Fri, 27 Feb 2026"
+      }
+    ],
+    "last_updated": "2026-03-06T18:00:00Z"
+  },
+  {
+    "deal": {
+      "id": "engie-ukpn",
+      "name": "ENGIE / UK Power Networks",
+      "buyer": "ENGIE",
+      "target": "UK Power Networks",
+      "deal_value": "£10.5B equity · £15.8B enterprise",
+      "announced_date": "Feb 25, 2026",
+      "sector": "Energy / Electricity Distribution",
+      "search_queries": [
+        "ENGIE UK Power Networks acquisition regulatory 2026",
+        "ENGIE UKPN deal closing CMA Ofgem approval",
+        "ENGIE UK Power Networks financing ABB"
+      ]
+    },
+    "kpis": {
+      "deal_value": "£10.5B equity",
+      "expected_close": "Mid-2026",
+      "deal_type": "All-Cash Acquisition"
+    },
+    "financing_structure": {
+      "total_label": "~€12B permanent financing · Bridge: BofA + BNP Paribas",
+      "bank_pct_disclosed": false,
+      "bridge_note": "Bridge loan mechanics: At signing (Feb 25, 2026), ENGIE drew a full acquisition bridge from Bank of America and BNP Paribas covering the entire purchase price (~€12.6B). This bridge is being progressively refinanced via three tranches: (1) €3B ABB equity — completed Feb 27, 2026; (2) ~€5B debt & hybrid issuance — pending; (3) ~€4B asset disposal proceeds by 2028, which will repay the residual bridge/debt. Source: ENGIE press release + MarketScreener (Feb 25–Mar 2, 2026).",
+      "components": [
+        {
+          "label": "Equity — ABB ✓ Completed",
+          "sublabel": "Accelerated bookbuilding · €28/share · 4.4% dilution · Feb 27, 2026",
+          "amount": "€3B",
+          "pct": 25,
+          "color": "#16a34a",
+          "parties": [
+            "Institutional investors (private placement)"
+          ],
+          "banks": [
+            {
+              "name": "BofA Securities",
+              "pct": null,
+              "role": "Global Coordinator"
+            },
+            {
+              "name": "BNP Paribas",
+              "pct": null,
+              "role": "Global Coordinator"
+            },
+            {
+              "name": "Barclays",
+              "pct": null,
+              "role": "Co-Bookrunner"
+            },
+            {
+              "name": "Crédit Agricole",
+              "pct": null,
+              "role": "Co-Bookrunner"
+            },
+            {
+              "name": "J.P. Morgan",
+              "pct": null,
+              "role": "Co-Bookrunner"
+            },
+            {
+              "name": "Société Générale",
+              "pct": null,
+              "role": "Co-Bookrunner"
+            }
+          ],
+          "notes": "French State (Agence des Participations de l'État) held 23.6% and did not participate; stake reduced to ~22.7%. 180-day lock-up on new shares. Described as 'one of the largest share capital increases of a French issuer in recent years.' (MarketScreener, Mar 2, 2026)"
+        },
+        {
+          "label": "Debt & Hybrid — Pending",
+          "sublabel": "~€5B debt + hybrid issuance · replaces bridge tranche",
+          "amount": "€5B",
+          "pct": 42,
+          "color": "#1e3a5f",
+          "banks": [
+            {
+              "name": "Bank of America",
+              "pct": null,
+              "role": "Bridge / Lead"
+            },
+            {
+              "name": "BNP Paribas",
+              "pct": null,
+              "role": "Bridge / Lead"
+            }
+          ],
+          "notes": "Bridge arranged by BofA + BNP Paribas at signing. Permanent debt & hybrid issuance pending. % split between debt and hybrid instruments not disclosed. ENGIE stated financing 'will help maintain its strong investment grade credit rating.' (ENGIE press release + MarketScreener)"
+        },
+        {
+          "label": "Asset Disposals — Future",
+          "sublabel": "ENGIE portfolio asset sales · target completion by 2028",
+          "amount": "€4B",
+          "pct": 33,
+          "color": "#64748b",
+          "parties": [
+            "ENGIE asset disposal program"
+          ],
+          "notes": "Disposal proceeds (~€4B by 2028) will repay the residual acquisition bridge/debt, permanently reducing leverage. Specific assets to be sold not disclosed. This tranche is a future cash inflow, not upfront financing — the bridge covers this gap until disposals are completed. (ENGIE press release, Feb 25, 2026)"
+        }
+      ]
+    },
+    "regulatory_tracker": [
+      {
+        "jurisdiction": "United Kingdom",
+        "body": "Ofgem",
+        "status": "pending",
+        "notes": "Change of control of an electricity distribution licence requires Ofgem consent under the Electricity Act 1989 and the Distribution Licence (Standard Condition 19). Mandatory for any acquisition of a UK licensed electricity distributor. Not named in available sources — standard regulatory requirement for this deal type.",
+        "source_url": null,
+        "source_date": null,
+        "not_in_sources": true
+      },
+      {
+        "jurisdiction": "United Kingdom",
+        "body": "CMA",
+        "status": "pending",
+        "notes": "UK merger control review under the Enterprise Act 2002. UKPN UK revenues exceed the £70M jurisdictional threshold. CMA has public interest powers for regulated utility acquisitions. Not named in available sources — standard regulatory requirement for this deal type.",
+        "source_url": null,
+        "source_date": null,
+        "not_in_sources": true
+      },
+      {
+        "jurisdiction": "United Kingdom",
+        "body": "NSIA (Investment Security Unit)",
+        "status": "pending",
+        "notes": "Mandatory notification under the National Security and Investment Act 2021. Energy is a mandatory notification sector; electricity distribution qualifies. The Secretary of State must clear or call in the acquisition within 30 working days. Not named in available sources — standard regulatory requirement for foreign acquisitions of UK energy infrastructure.",
+        "source_url": null,
+        "source_date": null,
+        "not_in_sources": true
+      },
+      {
+        "jurisdiction": "Hong Kong",
+        "body": "HKEx Listing Rules (SFC)",
+        "status": "required",
+        "notes": "Independent shareholder approval required at seller entities per HKEx Listing Rules (very substantial disposal): CK Infrastructure Holdings (40%), Power Assets Holdings (40%), CK Asset Holdings (20%). Confirmed in ENGIE press release as a closing condition.",
+        "source_url": "https://en.newsroom.engie.com/news/engie-announces-the-acquisition-of-uk-power-networks-uk-s-best-in-class-electricity-distribution-network-42503-314df.html",
+        "source_date": "Feb 25, 2026"
+      }
+    ],
+    "timeline_milestones": [
+      {
+        "label": "Deal Announced",
+        "date": "Feb 25, 2026",
+        "status": "completed"
+      },
+      {
+        "label": "ABB Completed",
+        "date": "Feb 27, 2026",
+        "status": "completed"
+      },
+      {
+        "label": "HK Shareholder Vote",
+        "date": "TBD",
+        "status": "upcoming"
+      },
+      {
+        "label": "Expected Close",
+        "date": "Mid-2026",
+        "status": "future"
+      }
+    ],
+    "facts": {
+      "regulatory": [],
+      "closing_timeline": [
+        {
+          "fact": "The acquisition is expected to close mid-2026, subject to regulatory approvals and approval by independent shareholders of Hong Kong-listed parent companies.",
+          "hedged": false,
+          "article_source": "Reuters / ENGIE Newsroom",
+          "article_url": "https://www.reuters.com/business/engie-shares-surge-14-billion-uk-power-grid-deal-2026-02-26/",
+          "published_date": "Thu, 26 Feb 2026"
+        }
+      ],
+      "financing": [],
+      "latest_news": [
+        {
+          "fact": "Mar 2, 2026 — ENGIE completed its ~€3B accelerated bookbuilding (ABB) capital increase. Issued 107,142,857 new shares at €28/share (3.2% discount to Feb 26 close). Described as 'one of the largest share capital increases of a French issuer in recent years.' French State stake reduced from 23.6% to ~22.7% (did not participate).",
+          "hedged": false,
+          "article_source": "MarketScreener",
+          "article_url": "https://www.marketscreener.com/news/engie-raises-3-billion-euros-to-finalize-uk-power-networks-acquisition-ce7e5cdcdd8cf620",
+          "published_date": "Mon, 02 Mar 2026"
+        },
+        {
+          "fact": "Feb 26, 2026 — ENGIE shares rose as much as 7.6% to €29.49 on announcement day — highest since September 2009 and biggest single-day rise since March 2022.",
+          "hedged": false,
+          "article_source": "Reuters / Bloomberg",
+          "article_url": "https://www.reuters.com/business/engie-shares-surge-14-billion-uk-power-grid-deal-2026-02-26/",
+          "published_date": "Thu, 26 Feb 2026"
+        },
+        {
+          "fact": "Feb 25, 2026 — ENGIE announced acquisition of UK Power Networks for £10.5B equity (£15.8B enterprise). ENGIE stated this is its largest-ever acquisition and UK will become its second-largest country of activity. UKPN serves 8.5 million customers and delivers approximately 28% of Britain's distributed electricity. Seller CK Group bypassed major investment banks, using law firm Linklaters LLP internally.",
+          "hedged": false,
+          "article_source": "ENGIE Newsroom / Bloomberg",
+          "article_url": "https://en.newsroom.engie.com/news/engie-announces-the-acquisition-of-uk-power-networks-uk-s-best-in-class-electricity-distribution-network-42503-314df.html",
+          "published_date": "Wed, 25 Feb 2026"
+        }
+      ]
+    },
+    "articles": [
+      {
+        "title": "Engie to Buy UK Power Networks for $14.2 Billion From Hong Kong's CK Group",
+        "link": "https://www.wsj.com/business/deals/engie-to-buy-uk-power-networks-for-14-2-billion-from-hong-kongs-ck-group-96c282d4",
+        "source": "WSJ",
+        "published": "Thu, 26 Feb 2026"
+      },
+      {
+        "title": "Engie shares surge on $14 billion UK power grid deal",
+        "link": "https://www.reuters.com/business/engie-shares-surge-14-billion-uk-power-grid-deal-2026-02-26/",
+        "source": "Reuters",
+        "published": "Thu, 26 Feb 2026"
+      },
+      {
+        "title": "Engie Jumps After £10.5 Billion Deal to Buy UK Power Networks",
+        "link": "https://www.bloomberg.com/news/articles/2026-02-25/france-s-engie-to-buy-uk-power-networks-for-10-5-billion",
+        "source": "Bloomberg",
+        "published": "Thu, 26 Feb 2026"
+      },
+      {
+        "title": "Engie Raises 3 Billion Euros to Finalize UK Power Networks Acquisition",
+        "link": "https://www.marketscreener.com/news/engie-raises-3-billion-euros-to-finalize-uk-power-networks-acquisition-ce7e5cdcdd8cf620",
+        "source": "MarketScreener",
+        "published": "Mon, 02 Mar 2026"
+      },
+      {
+        "title": "ENGIE announces acquisition of UK Power Networks (press release)",
+        "link": "https://en.newsroom.engie.com/news/engie-announces-the-acquisition-of-uk-power-networks-uk-s-best-in-class-electricity-distribution-network-42503-314df.html",
+        "source": "ENGIE Newsroom",
+        "published": "Wed, 25 Feb 2026"
+      }
+    ],
+    "last_updated": "2026-03-06T09:00:00Z"
+  }
+];
+
+/* ── helpers ── */
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmt(s){
+  if(!s) return '';
+  try{
+    const d=new Date(s);
+    if(!isNaN(d)) return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  }catch(e){}
+  return String(s).slice(0,16);
+}
+
+/* ── STATUS BADGE ── */
+const STATUS_MAP={
+  cleared:  ['status-cleared',  '✓ Cleared'],
+  favorable:['status-favorable','◎ Favorable'],
+  pending:  ['status-pending',  '⏳ Pending'],
+  risk:     ['status-risk',     '⚠ Risk'],
+  blocked:  ['status-blocked',  '✗ Blocked'],
+  required: ['status-required', '◉ Required'],
+};
+function statusBadge(s){
+  const [cls,label]=STATUS_MAP[s]||['status-pending','⏳ '+esc(s)];
+  return `<span class="text-xs font-semibold px-2.5 py-1 rounded-full ${cls}">${label}</span>`;
+}
+
+/* ── FINANCING SECTION ── */
+function financingHTML(fs){
+  if(!fs||!fs.components||!fs.components.length){
+    return '<p class="text-slate-400 italic text-sm py-2">No financing structure reported in available sources.</p>';
+  }
+
+  /* stacked bar */
+  const bar = fs.components.map(c=>
+    `<div class="fin-bar-segment" style="width:${c.pct}%;background:${c.color||'#334155'};"
+          title="${esc(c.label)}: ${esc(c.amount)} (${c.pct}%)"
+     >${c.pct}%</div>`
+  ).join('');
+
+  /* bridge note banner */
+  const bridgeBanner = fs.bridge_note ? `
+    <div style="background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;gap:8px;align-items:flex-start;">
+      <span style="font-size:.85rem;flex-shrink:0;">🔗</span>
+      <p style="font-size:.75rem;color:#78350f;line-height:1.5;margin:0;word-break:break-word;overflow-wrap:break-word;">${esc(fs.bridge_note)}</p>
+    </div>` : '';
+
+  /* breakdown cards — banks support both string[] and {name,pct,role}[] */
+  const cards = fs.components.map(c=>{
+    /* parties */
+    const partiesHTML = (c.parties||[]).length ? `
+      <div style="margin-top:10px;">
+        <div class="section-label">Equity Providers</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;">
+          ${(c.parties||[]).map(p=>`<span style="background:#f1f5f9;color:#475569;font-size:.65rem;padding:2px 8px;border-radius:4px;white-space:nowrap;">${esc(p)}</span>`).join('')}
+        </div>
+      </div>` : '';
+
+    /* banks — support string or {name, pct, role} */
+    const bankItems = (c.banks||[]).map(b=>{
+      if(typeof b==='string') return {name:b, pct:null, role:null};
+      return b;
+    });
+    const banksHTML = bankItems.length ? `
+      <div style="margin-top:10px;">
+        <div class="section-label">Banks${fs.bank_pct_disclosed===false ? ' · % split not publicly disclosed' : ''}</div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          ${bankItems.map(b=>{
+            const pctBar = b.pct ? `
+              <div style="display:flex;align-items:center;gap:6px;flex:1;">
+                <div style="flex:1;height:5px;background:#e2e8f0;border-radius:3px;min-width:60px;">
+                  <div style="width:${b.pct}%;height:100%;background:${c.color||'#2563eb'};border-radius:3px;"></div>
+                </div>
+                <span style="font-size:.65rem;font-weight:700;color:${c.color||'#2563eb'};white-space:nowrap;">${b.pct}%</span>
+              </div>` : '';
+            const roleTag = b.role ? `<span style="font-size:.6rem;color:#94a3b8;margin-left:4px;">${esc(b.role)}</span>` : '';
+            return `
+              <div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:#eff6ff;border-radius:6px;">
+                <span style="font-size:.7rem;font-weight:600;color:#1d4ed8;overflow:hidden;text-overflow:ellipsis;">${esc(b.name||b)}</span>
+                ${roleTag}
+                ${pctBar}
+              </div>`;
+          }).join('')}
+        </div>
+      </div>` : '';
+
+    return `
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;min-width:0;overflow:hidden;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px;">
+          <div style="min-width:0;">
+            <div style="font-weight:700;color:#0f172a;font-size:.85rem;">${esc(c.label)}</div>
+            ${c.sublabel ? `<div style="color:#64748b;font-size:.72rem;margin-top:3px;line-height:1.4;">${esc(c.sublabel)}</div>` : ''}
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div style="font-size:1.5rem;font-weight:900;color:${c.color||'#334155'};line-height:1;">${esc(c.amount)}</div>
+            <div style="font-size:.65rem;color:#94a3b8;font-weight:600;margin-top:2px;">${c.pct}% of total</div>
+          </div>
+        </div>
+        ${partiesHTML}
+        ${banksHTML}
+        ${c.notes ? `<div style="margin-top:10px;font-size:.72rem;color:#64748b;font-style:italic;line-height:1.4;border-top:1px solid #e2e8f0;padding-top:8px;word-break:break-word;overflow-wrap:break-word;">${esc(c.notes)}</div>` : ''}
+      </div>`;
+  }).join('');
+
+  return `
+    <div style="margin-bottom:16px;">
+      <div class="section-label">Structure Overview — ${esc(fs.total_label||'')}</div>
+      <div style="display:flex;border-radius:8px;overflow:hidden;height:40px;margin-bottom:8px;">${bar}</div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;">
+        ${fs.components.map(c=>`
+          <div style="display:flex;align-items:center;gap:6px;font-size:.75rem;color:#475569;">
+            <span style="width:12px;height:12px;border-radius:3px;flex-shrink:0;background:${c.color||'#334155'};"></span>
+            ${esc(c.label)} · ${esc(c.amount)} (${c.pct}%)
+          </div>`).join('')}
+      </div>
+    </div>
+    ${bridgeBanner}
+    <div style="display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));min-width:0;">${cards}</div>`;
+}
+
+/* ── REGULATORY TABLE ── */
+function regulatoryHTML(tracker){
+  if(!tracker||!tracker.length){
+    return '<p class="text-slate-400 italic text-sm py-2">No regulatory information reported in available sources.</p>';
+  }
+  const rows = tracker.map(r=>{
+    const src = r.source_url
+      ? `<a href="${esc(r.source_url)}" target="_blank" rel="noopener noreferrer"
+            class="text-blue-600 hover:underline text-xs font-medium">Source →</a>`
+      : '';
+    const notInSrcBadge = r.not_in_sources
+      ? `<span style="display:inline-block;font-size:.6rem;background:#f3f4f6;color:#6b7280;border:1px solid #d1d5db;padding:1px 7px;border-radius:4px;margin-top:5px;">Standard process · not confirmed in sources</span>`
+      : '';
+    return `
+      <tr class="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
+        <td class="py-3 px-4 text-sm font-semibold text-slate-700 whitespace-nowrap">${esc(r.jurisdiction)}</td>
+        <td class="py-3 px-4 text-sm text-slate-600 whitespace-nowrap">${esc(r.body)}</td>
+        <td class="py-3 px-4">${statusBadge(r.status)}</td>
+        <td class="py-3 px-4 text-sm text-slate-600 leading-snug">
+          <div>${esc(r.notes||'')}</div>
+          ${notInSrcBadge}
+        </td>
+        <td class="py-3 px-4 whitespace-nowrap">
+          ${r.source_date ? `<div class="text-xs text-slate-400 mb-1">${esc(r.source_date)}</div>` : ''}
+          ${src || (r.not_in_sources ? '<span class="text-xs text-slate-300">—</span>' : '')}
+        </td>
+      </tr>`;
+  }).join('');
+
+  return `
+    <div class="overflow-x-auto rounded-xl border border-slate-200">
+      <table class="w-full min-w-[600px]">
+        <thead>
+          <tr style="background:#f8fafc;border-bottom:2px solid #e2e8f0;">
+            <th class="py-2.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Jurisdiction</th>
+            <th class="py-2.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Regulator / Body</th>
+            <th class="py-2.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+            <th class="py-2.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Notes</th>
+            <th class="py-2.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Source</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white">${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+/* ── TIMELINE ── */
+function timelineHTML(milestones){
+  if(!milestones||!milestones.length) return '';
+
+  /* Each milestone column is 148px wide; connector fills the gap */
+  const cols = milestones.map((m,i)=>{
+    const isDone = m.status==='completed';
+    const isNext = m.status==='upcoming';
+
+    const dotBg     = isDone ? '#2563eb'  : 'white';
+    const dotBorder = isDone ? '#2563eb'  : isNext ? '#2563eb' : '#cbd5e1';
+    const dotColor  = isDone ? 'white'    : isNext ? '#2563eb' : '#94a3b8';
+    const labelColor= isDone ? '#0f172a'  : isNext ? '#1d4ed8' : '#94a3b8';
+    const dateColor = isDone ? '#2563eb'  : isNext ? '#3b82f6' : '#94a3b8';
+    const labelW    = isDone ? '700'      : isNext ? '700'     : '400';
+
+    const connectorColor = (isDone && i < milestones.length-1) ? '#2563eb' : '#e2e8f0';
+    const connector = i < milestones.length-1 ? `
+      <div style="flex:1;height:2px;background:${connectorColor};margin-top:19px;min-width:32px;"></div>` : '';
+
+    return `
+      <div style="display:flex;align-items:flex-start;flex-shrink:0;">
+        <div style="display:flex;flex-direction:column;align-items:center;width:148px;">
+          <!-- dot -->
+          <div style="
+            width:40px;height:40px;border-radius:50%;
+            background:${dotBg};border:2.5px solid ${dotBorder};
+            display:flex;align-items:center;justify-content:center;
+            font-size:.8rem;font-weight:900;color:${dotColor};
+            flex-shrink:0;box-shadow:0 0 0 4px ${isDone?'rgba(37,99,235,.1)':isNext?'rgba(37,99,235,.08)':'transparent'};
+          ">${isDone ? '✓' : i+1}</div>
+          <!-- label block — full width, no overflow -->
+          <div style="margin-top:12px;text-align:center;width:100%;padding:0 8px;box-sizing:border-box;">
+            <div style="font-size:.72rem;font-weight:${labelW};color:${labelColor};line-height:1.35;word-break:break-word;">
+              ${esc(m.label)}
+            </div>
+            <div style="font-size:.68rem;color:${dateColor};margin-top:4px;font-weight:${isDone?'600':'400'};">
+              ${esc(m.date)}
+            </div>
+          </div>
+        </div>
+        ${connector}
+      </div>`;
+  }).join('');
+
+  return `
+    <div style="overflow-x:auto;padding:4px 2px 16px;">
+      <div style="display:flex;align-items:flex-start;min-width:${milestones.length*148}px;">
+        ${cols}
+      </div>
+    </div>`;
+}
+
+/* ── LATEST NEWS ── */
+function newsHTML(news){
+  if(!news||!news.length)
+    return '<p class="text-slate-400 italic text-sm py-2">No news reported in available sources.</p>';
+  return news.map(n=>{
+    const hedged = n.hedged ? '<span class="tag-hedged ml-1.5">Uncertain</span>' : '';
+    return `
+      <div class="news-row px-5 py-3.5">
+        <div class="flex items-start gap-3">
+          <div class="flex-shrink-0 text-right" style="width:64px;">
+            <div class="text-xs font-bold text-slate-500">${fmt(n.published_date)}</div>
+            <div class="text-xs text-slate-400 mt-0.5 leading-tight">${esc(n.article_source||'')}</div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm text-slate-800 leading-relaxed">${esc(n.fact)}${hedged}</p>
+            ${n.article_url ? `<a href="${esc(n.article_url)}" target="_blank" rel="noopener noreferrer"
+                class="text-xs text-blue-600 hover:underline font-medium mt-1 inline-block">View article →</a>` : ''}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/* ── SECTION WRAPPER ── */
+function section(title, icon, content, accentColor){
+  return `
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div class="flex items-center gap-3 px-6 py-4 border-b border-slate-100"
+           style="border-left:4px solid ${accentColor||'#e2e8f0'}">
+        <span class="text-lg">${icon}</span>
+        <h3 class="font-bold text-slate-800">${title}</h3>
+      </div>
+      <div class="px-6 py-4">${content}</div>
+    </div>`;
+}
+
+/* ── DEAL CARD ── */
+function cardHTML(result, idx){
+  const d  = result.deal || {};
+  const f  = result.facts || {};
+  const fs = result.financing_structure;
+  const rt = result.regulatory_tracker;
+  const tl = result.timeline_milestones;
+  const kp = result.kpis || {};
+  const arts = result.articles || [];
+  const upd = fmt(result.last_updated) || '—';
+
+  /* KPI: regulatory summary */
+  const regCleared = (rt||[]).filter(r=>r.status==='cleared'||r.status==='favorable').length;
+  const regPending = (rt||[]).filter(r=>r.status==='pending'||r.status==='risk'||r.status==='blocked').length;
+  const regTotal   = (rt||[]).length;
+
+  /* KPI boxes */
+  const kpiBoxes = `
+    <div class="kpi-box">
+      <div style="color:rgba(255,255,255,.5);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Enterprise Value</div>
+      <div style="color:#fff;font-size:1.4rem;font-weight:900;line-height:1.1;">${esc(d.deal_value||kp.deal_value||'—')}</div>
+      ${d.announced_date ? `<div style="color:rgba(255,255,255,.4);font-size:.7rem;margin-top:4px;">Announced ${esc(d.announced_date)}</div>` : ''}
+    </div>
+    <div class="kpi-box">
+      <div style="color:rgba(255,255,255,.5);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Expected Close</div>
+      <div style="color:#fff;font-size:1.4rem;font-weight:900;line-height:1.1;">${esc(kp.expected_close||(tl&&tl.length?tl[tl.length-1].date:null)||'—')}</div>
+      ${kp.deal_type ? `<div style="color:rgba(255,255,255,.4);font-size:.7rem;margin-top:4px;">${esc(kp.deal_type)}</div>` : ''}
+    </div>
+    ${regTotal ? `
+    <div class="kpi-box">
+      <div style="color:rgba(255,255,255,.5);font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Regulatory</div>
+      <div style="display:flex;align-items:baseline;gap:6px;">
+        <span style="color:#4ade80;font-size:1.4rem;font-weight:900;line-height:1.1;">${regCleared}</span>
+        <span style="color:rgba(255,255,255,.4);font-size:.8rem;">cleared</span>
+        <span style="color:rgba(255,255,255,.2);">/</span>
+        <span style="color:#fbbf24;font-size:1.4rem;font-weight:900;line-height:1.1;">${regPending}</span>
+        <span style="color:rgba(255,255,255,.4);font-size:.8rem;">pending</span>
+      </div>
+      <div style="color:rgba(255,255,255,.4);font-size:.7rem;margin-top:4px;">${regTotal} jurisdictions tracked</div>
+    </div>` : ''}`;
+
+  /* sources strip */
+  const sourcesHTML = arts.length ? `
+    <div class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-wrap gap-2 items-center">
+      <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider mr-1">Sources</span>
+      ${arts.map(a=>`<a href="${esc(a.link)}" target="_blank" rel="noopener noreferrer" title="${esc(a.title)}"
+          class="text-xs bg-white border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-300 px-2.5 py-1 rounded-lg transition-colors"
+        >${esc(a.source)}</a>`).join('')}
+    </div>` : '';
+
+  return `
+    <div class="deal-card rounded-2xl overflow-hidden shadow-sm border border-slate-200"
+         data-search="${esc((d.name+' '+d.buyer+' '+d.target+' '+(d.sector||'')).toLowerCase())}">
+
+      <!-- ▸ HEADER -->
+      <div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 100%);" class="px-6 py-5">
+        <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span style="color:#fff;font-size:1.25rem;font-weight:800;">${esc(d.buyer)}</span>
+              <span style="color:#2563eb;font-size:1.1rem;">→</span>
+              <span style="color:#fff;font-size:1.25rem;font-weight:800;">${esc(d.target)}</span>
+            </div>
+            ${d.sector ? `<div style="color:#94a3b8;font-size:.75rem;margin-top:4px;">${esc(d.sector)}</div>` : ''}
+          </div>
+          <div class="flex items-center gap-2">
+            <span style="background:rgba(37,99,235,.3);color:#93c5fd;font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:999px;border:1px solid rgba(147,197,253,.2);">IN PROGRESS</span>
+            <span style="color:rgba(255,255,255,.35);font-size:.7rem;">Data as of ${upd}</span>
+          </div>
+        </div>
+        <!-- KPIs -->
+        <div class="grid gap-3" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
+          ${kpiBoxes}
+        </div>
+      </div>
+
+      <!-- ▸ BODY SECTIONS -->
+      <div class="space-y-4 p-4" style="background:#f0f2f5;">
+
+        ${section('Financing Structure', '💰', financingHTML(fs||null), '#2563eb')}
+
+        ${section('Regulatory Tracker', '🏛️', regulatoryHTML(rt||null), '#f59e0b')}
+
+        ${tl&&tl.length ? section('Deal Timeline', '📅', timelineHTML(tl), '#10b981') : ''}
+
+        ${section('Latest News', '📰', newsHTML(f.latest_news||null), '#8b5cf6')}
+
+      </div>
+
+      ${sourcesHTML}
+    </div>`;
+}
+
+/* ── RENDER ── */
+function render(data){
+  document.getElementById('cards').innerHTML = data.map((r,i)=>cardHTML(r,i)).join('');
+  const n = data.length;
+  document.getElementById('deal-badge').textContent = n+' Active Deal'+(n!==1?'s':'');
+}
+
+/* ── SEARCH ── */
+document.getElementById('search').addEventListener('input',function(){
+  const q=this.value.toLowerCase().trim();
+  let v=0;
+  document.querySelectorAll('.deal-card').forEach(c=>{
+    const m=!q||c.dataset.search.includes(q)||c.textContent.toLowerCase().includes(q);
+    c.style.display=m?'':'none';
+    if(m)v++;
+  });
+  document.getElementById('deal-badge').textContent=v+' Active Deal'+(v!==1?'s':'');
+  document.getElementById('no-results').classList.toggle('hidden',v>0);
+});
+
+render(DATA);
+</script>
+</body>
+</html>

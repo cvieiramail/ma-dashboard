@@ -1,0 +1,32 @@
+{
+  "deals": [
+    {
+      "id": "paramount-wbd",
+      "name": "Paramount Skydance / Warner Bros. Discovery",
+      "buyer": "Paramount Skydance",
+      "target": "Warner Bros. Discovery",
+      "deal_value": "$110B enterprise · $31/share cash",
+      "announced_date": "Feb 27, 2026",
+      "sector": "Media & Entertainment",
+      "search_queries": [
+        "Paramount Skydance Warner Bros Discovery acquisition merger 2026",
+        "WBD Paramount Skydance regulatory antitrust 2026",
+        "Warner Bros Discovery closing timeline shareholder vote"
+      ]
+    },
+    {
+      "id": "engie-ukpn",
+      "name": "ENGIE / UK Power Networks",
+      "buyer": "ENGIE",
+      "target": "UK Power Networks",
+      "deal_value": "£10.5B equity · £15.8B enterprise",
+      "announced_date": "Feb 25, 2026",
+      "sector": "Energy / Electricity Distribution",
+      "search_queries": [
+        "ENGIE UK Power Networks acquisition regulatory 2026",
+        "ENGIE UKPN deal closing CMA Ofgem approval",
+        "ENGIE UK Power Networks financing ABB"
+      ]
+    }
+  ]
+}
