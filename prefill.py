@@ -185,28 +185,15 @@ results = [
         },
         {
           "fact": (
-            "Early Mar 2026 — Congressional Democrats escalated opposition. Sen. Elizabeth Warren (D-MA) called the deal "
-            "'an antitrust disaster threatening higher prices and fewer choices for American families.' "
-            "Sen. Cory Booker (D-NJ) notified Ellison to preserve communications with President Trump. "
-            "Democratic legislators called for scrutiny of Skydance's ownership of CBS News and CNN under the same company."
+            "Mar 10, 2026 — WBD shareholder vote on the Paramount merger confirmed for March 20, 2026 at 8:00 a.m. ET. "
+            "Paramount CEO David Ellison described the deal as 'pro-competitive, pro-consumer, and good for the overall "
+            "creative economy,' citing a combined subscriber base of 'over 200 million basically gross subscribers.' "
+            "Paramount retained Makan Delrahim — former head of the DOJ Antitrust Division under President Trump — "
+            "to lead the company's federal regulatory strategy."
           ),
           "hedged": False,
-          "article_source": "Time / NBC News",
-          "article_url": "https://time.com/7381536/paramount-warner-netflix-larry-david-ellison-donald-trump-democrats-reactions/",
-          "published_date": "Fri, 27 Feb 2026"
-        },
-        {
-          "fact": (
-            "Mar 10–11, 2026 — WBD shareholder vote on the Paramount merger confirmed for March 20, 2026 at 8:00 a.m. ET "
-            "(date originally announced Feb 17 in official WBD press release; retained for Paramount vote after deal "
-            "signed Feb 27). Paramount CEO David Ellison described the deal as 'pro-competitive, pro-consumer, and good "
-            "for the overall creative economy,' citing a combined subscriber base of 'over 200 million basically gross "
-            "subscribers.' Paramount retained Makan Delrahim — former head of the DOJ Antitrust Division under President "
-            "Trump — to lead the company's federal regulatory strategy."
-          ),
-          "hedged": False,
-          "article_source": "PRNewswire / WBD IR (Feb 17, 2026) · Variety (Mar 10, 2026)",
-          "article_url": "https://www.prnewswire.com/news-releases/warner-bros-discovery-sets-special-meeting-date-of-march-20-2026-and-unanimously-recommends-shareholders-vote-for-netflix-merger-warner-bros-discovery-to-initiate-discussions-with-paramount-skydance-for-their-best-and-final-o-302689237.html",
+          "article_source": "Variety",
+          "article_url": "https://variety.com/2026/film/news/warner-bros-discovery-paramount-talks-netflix-shareholder-vote-1236665083/",
           "published_date": "Tue, 10 Mar 2026"
         },
         {
@@ -264,6 +251,18 @@ results = [
           "hedged": False,
           "article_source": "NBC News",
           "article_url": "https://www.nbcnews.com/business/media/warner-bros-discovery-signs-merger-agreement-paramount-skydance-rcna261035",
+          "published_date": "Fri, 27 Feb 2026"
+        },
+        {
+          "fact": (
+            "Feb 27, 2026 — Congressional Democrats reacted immediately to Netflix withdrawing. Sen. Elizabeth Warren (D-MA) "
+            "called the deal 'an antitrust disaster threatening higher prices and fewer choices for American families.' "
+            "Sen. Cory Booker (D-NJ) notified Ellison to preserve communications with President Trump. Democrats called "
+            "for scrutiny of Skydance's ownership of CBS News and CNN under the same corporate parent."
+          ),
+          "hedged": False,
+          "article_source": "Time",
+          "article_url": "https://time.com/7381536/paramount-warner-netflix-larry-david-ellison-donald-trump-democrats-reactions/",
           "published_date": "Fri, 27 Feb 2026"
         }
       ]
