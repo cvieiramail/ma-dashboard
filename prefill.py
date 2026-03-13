@@ -108,15 +108,19 @@ results = [
         "body": "Multi-State Attorneys General",
         "status": "risk",
         "notes": (
-          "California AG Rob Bonta confirmed California will conduct its own independent antitrust review. Bonta stated "
-          "the deal has 'many regulatory hurdles' and that he 'wouldn't be surprised if multiple states working together' "
-          "on a challenge. Coalition of 28 public interest groups (led by Center for American Progress Action Fund) wrote "
-          "open letter to state AGs calling for legal challenge, arguing merger reduces major film studios from 5 to 4. "
-          "Former DOJ antitrust chief Bill Baer: 'a combined lawsuit by state attorneys general presents a real threat.' "
-          "Paramount retained Makan Delrahim (former DOJ Antitrust Division chief) to lead its federal regulatory strategy."
+          "California AG Rob Bonta confirmed open California DOJ investigation: 'Paramount/Warner Bros is not a done deal' (X post). "
+          "Bonta stated deal has 'many regulatory hurdles' and he 'wouldn't be surprised if multiple states working together.' "
+          "Coalition of 28 public interest groups (led by Center for American Progress Action Fund) wrote open letter to state AGs "
+          "calling for legal challenge, arguing merger reduces major film studios from 5 to 4. "
+          "Democratic Attorneys General Association hired Rohit Chopra (former CFPB director, former FTC commissioner) to coordinate "
+          "state-level consumer protection and antitrust enforcement strategy. "
+          "Congressional Democrats escalated opposition: Sen. Elizabeth Warren (D-MA) called deal 'an antitrust disaster threatening "
+          "higher prices and fewer choices for American families'; Sen. Cory Booker (D-NJ) notified Ellison to preserve communications "
+          "with President Trump. Former DOJ antitrust chief Bill Baer: 'a combined lawsuit by state attorneys general presents a real "
+          "threat.' Paramount retained Makan Delrahim (former DOJ Antitrust Division chief) to lead its federal regulatory strategy."
         ),
-        "source_url": "https://deadline.com/2026/03/paramount-warner-bros-state-attorneys-general-1236746176/",
-        "source_date": "Mar 6–11, 2026"
+        "source_url": "https://deadline.com/2026/03/california-attorney-general-antitrust-paramount-warner-deal-1236745088/",
+        "source_date": "Mar 6–13, 2026"
       },
       {
         "jurisdiction": "European Union",
@@ -167,6 +171,21 @@ results = [
       ],
       "financing": [],
       "latest_news": [
+        {
+          "fact": (
+            "Mar 12–13, 2026 — State-level antitrust pressure intensifies. Democratic Attorneys General Association hired "
+            "Rohit Chopra (former CFPB director, former FTC commissioner) to coordinate multi-state consumer protection "
+            "and antitrust enforcement strategy — directly relevant to state challenges to the merger. "
+            "Sen. Elizabeth Warren (D-MA) called the deal 'an antitrust disaster threatening higher prices and fewer choices "
+            "for American families.' Sen. Cory Booker (D-NJ) notified Ellison to preserve his communications with President Trump. "
+            "CA AG Bonta posted on X: 'Paramount/Warner Bros is not a done deal. The California Department of Justice has an "
+            "open investigation, and we intend to be vigorous in our review.'"
+          ),
+          "hedged": False,
+          "article_source": "American Banker / Time / NBC News / Deadline",
+          "article_url": "https://deadline.com/2026/03/california-attorney-general-antitrust-paramount-warner-deal-1236745088/",
+          "published_date": "Thu, 12 Mar 2026"
+        },
         {
           "fact": (
             "Mar 10–11, 2026 — WBD shareholder vote on the Paramount merger confirmed for March 20, 2026 at 8:00 a.m. ET. "
@@ -242,6 +261,7 @@ results = [
     },
 
     "articles": [
+      {"title": "California AG Cites Antitrust Concerns Over Paramount-WBD Merger: EXCLU", "link": "https://deadline.com/2026/03/california-attorney-general-antitrust-paramount-warner-deal-1236745088/", "source": "Deadline", "published": "Thu, 12 Mar 2026"},
       {"title": "WBD Shareholder Vote on Paramount Merger Set for March 20", "link": "https://variety.com/2026/biz/news/paramount-wbd-shareholder-vote-march-20-1236746500/", "source": "Variety", "published": "Tue, 10 Mar 2026"},
       {"title": "Public Interest Groups Call For State AGs To Challenge Paramount-WBD", "link": "https://deadline.com/2026/03/paramount-warner-bros-state-attorneys-general-1236746176/", "source": "Deadline", "published": "Fri, 06 Mar 2026"},
       {"title": "Paramount-Warner Bros mega-merger could still face 'real threats'", "link": "https://www.theguardian.com/media/2026/mar/05/paramount-warner-bros-mega-merger-antitrust-threats", "source": "The Guardian", "published": "Thu, 05 Mar 2026"},
@@ -250,7 +270,7 @@ results = [
       {"title": "Paramount's $110B Warner Bros. Deal Still Under US Antitrust Review", "link": "https://www.bloomberg.com/news/articles/2026-03-02/paramount-deal-still-under-us-review-with-challenge-unlikely", "source": "Bloomberg", "published": "Mon, 02 Mar 2026"},
       {"title": "Warner Bros. Discovery signs merger agreement with Paramount Skydance", "link": "https://www.nbcnews.com/business/media/warner-bros-discovery-signs-merger-agreement-paramount-skydance-rcna261035", "source": "NBC News", "published": "Fri, 27 Feb 2026"},
     ],
-    "last_updated": "2026-03-12T12:00:00Z"
+    "last_updated": "2026-03-13T12:00:00Z"
   },
 
   # ══════════════════════════════════════════════════════════════
@@ -455,7 +475,7 @@ results = [
       {"title": "Engie Raises 3 Billion Euros to Finalize UK Power Networks Acquisition", "link": "https://www.marketscreener.com/news/engie-raises-3-billion-euros-to-finalize-uk-power-networks-acquisition-ce7e5cdcdd8cf620", "source": "MarketScreener", "published": "Mon, 02 Mar 2026"},
       {"title": "ENGIE announces acquisition of UK Power Networks (press release)", "link": "https://en.newsroom.engie.com/news/engie-announces-the-acquisition-of-uk-power-networks-uk-s-best-in-class-electricity-distribution-network-42503-314df.html", "source": "ENGIE Newsroom", "published": "Wed, 25 Feb 2026"},
     ],
-    "last_updated": "2026-03-12T12:00:00Z"
+    "last_updated": "2026-03-13T12:00:00Z"
   }
 ]
 
