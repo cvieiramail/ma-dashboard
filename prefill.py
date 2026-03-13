@@ -185,19 +185,6 @@ results = [
         },
         {
           "fact": (
-            "Mar 10, 2026 — WBD shareholder vote on the Paramount merger confirmed for March 20, 2026 at 8:00 a.m. ET. "
-            "Paramount CEO David Ellison described the deal as 'pro-competitive, pro-consumer, and good for the overall "
-            "creative economy,' citing a combined subscriber base of 'over 200 million basically gross subscribers.' "
-            "Paramount retained Makan Delrahim — former head of the DOJ Antitrust Division under President Trump — "
-            "to lead the company's federal regulatory strategy."
-          ),
-          "hedged": False,
-          "article_source": "Variety",
-          "article_url": "https://variety.com/2026/film/news/warner-bros-discovery-paramount-talks-netflix-shareholder-vote-1236665083/",
-          "published_date": "Tue, 10 Mar 2026"
-        },
-        {
-          "fact": (
             "Mar 6, 2026 — Coalition of 28 public interest groups led by Center for American Progress Action Fund wrote "
             "open letter to state AGs calling for legal challenge to the merger. Letter argues the combination reduces "
             "major film studios from 5 to 4. California AG Rob Bonta confirmed California's independent antitrust review; "
@@ -276,6 +263,18 @@ results = [
           "article_source": "The Wrap",
           "article_url": "https://www.thewrap.com/media-platforms/politics/paramount-warner-bros-discovery-merger-adam-schiff-scrutiny/",
           "published_date": "Fri, 27 Feb 2026"
+        },
+        {
+          "fact": (
+            "Feb 17, 2026 — WBD officially set March 20, 2026 at 8:00 a.m. ET as the date for its special shareholder "
+            "meeting. At this stage WBD's board unanimously recommended shareholders vote for the Netflix merger, "
+            "while simultaneously opening a 7-day window for Paramount to submit its best and final offer. "
+            "The March 20 date was retained for the Paramount merger vote after the Paramount deal was signed on Feb 27."
+          ),
+          "hedged": False,
+          "article_source": "Variety",
+          "article_url": "https://variety.com/2026/film/news/warner-bros-discovery-paramount-talks-netflix-shareholder-vote-1236665083/",
+          "published_date": "Tue, 17 Feb 2026"
         }
       ]
     },
