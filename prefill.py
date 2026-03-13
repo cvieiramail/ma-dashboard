@@ -264,6 +264,18 @@ results = [
           "article_source": "Time",
           "article_url": "https://time.com/7381536/paramount-warner-netflix-larry-david-ellison-donald-trump-democrats-reactions/",
           "published_date": "Fri, 27 Feb 2026"
+        },
+        {
+          "fact": (
+            "Feb 27, 2026 — Sen. Adam Schiff (D-CA) called for the highest level of regulatory scrutiny: "
+            "'The merger of two of Hollywood's biggest studios must be subject to the highest levels of scrutiny, "
+            "free from White House political influence, to determine its impact on American jobs, freedom of speech "
+            "and the future of one of our nation's greatest exports.'"
+          ),
+          "hedged": False,
+          "article_source": "The Wrap",
+          "article_url": "https://www.thewrap.com/media-platforms/politics/paramount-warner-bros-discovery-merger-adam-schiff-scrutiny/",
+          "published_date": "Fri, 27 Feb 2026"
         }
       ]
     },
@@ -278,6 +290,7 @@ results = [
       {"title": "FCC Chair: WBD-Paramount deal is 'cleaner' than Netflix's, will be approved 'quickly'", "link": "https://www.cnbc.com/2026/03/03/fcc-chair-brendan-carr-wbd-paramount-merger-deal-netflix.html", "source": "CNBC", "published": "Tue, 03 Mar 2026"},
       {"title": "Paramount's $110B Warner Bros. Deal Still Under US Antitrust Review", "link": "https://www.bloomberg.com/news/articles/2026-03-02/paramount-deal-still-under-us-review-with-challenge-unlikely", "source": "Bloomberg", "published": "Mon, 02 Mar 2026"},
       {"title": "Warner Bros. Discovery signs merger agreement with Paramount Skydance", "link": "https://www.nbcnews.com/business/media/warner-bros-discovery-signs-merger-agreement-paramount-skydance-rcna261035", "source": "NBC News", "published": "Fri, 27 Feb 2026"},
+      {"title": "Adam Schiff Says Paramount-WBD Merger 'Must Be Subject to the Highest Levels of Scrutiny'", "link": "https://www.thewrap.com/media-platforms/politics/paramount-warner-bros-discovery-merger-adam-schiff-scrutiny/", "source": "The Wrap", "published": "Fri, 27 Feb 2026"},
     ],
     "last_updated": "2026-03-13T12:00:00Z"
   },
