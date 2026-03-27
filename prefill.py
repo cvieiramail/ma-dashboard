@@ -84,9 +84,12 @@ results = [
         "status": "favorable",
         "notes": (
           "HSR 10-day waiting period expired after DOJ second request. Company stated: 'there is no statutory "
-          "impediment in the U.S. to closing.' However, per Bloomberg (Mar 2), deal 'remains under active review "
-          "by US antitrust officials' though odds of a legal challenge are described as 'low.' Netflix CLO stated "
-          "HSR expiration 'does not signal DOJ approval' and Paramount is 'a long way' from securing all needed approvals."
+          "impediment in the U.S. to closing.' Per Bloomberg (Mar 2), deal 'remains under active review by US antitrust "
+          "officials' though odds of a legal challenge are described as 'low.' Netflix CLO stated HSR expiration 'does not "
+          "signal DOJ approval' and Paramount is 'a long way' from securing all needed approvals. "
+          "DOJ Acting AAG Omeed Assefi stated (Mar 18, 2026) that the review is 'not political' and 'absolutely not' "
+          "being expedited for political reasons — the DOJ will 'take as long as we need' to complete the review. "
+          "(US News / Reuters, Mar 18, 2026)"
         ),
         "source_url": "https://www.bloomberg.com/news/articles/2026-03-02/paramount-deal-still-under-us-review-with-challenge-unlikely",
         "source_date": "Mar 2–3, 2026"
@@ -145,7 +148,7 @@ results = [
     # ── TIMELINE ────────────────────────────────────────────────
     "timeline_milestones": [
       {"label": "Deal Signed",       "date": "Feb 27, 2026",       "status": "completed"},
-      {"label": "Shareholder Vote",  "date": "Mar 20, 2026",       "status": "upcoming"},
+      {"label": "Shareholder Vote",  "date": "Apr 23, 2026",       "status": "upcoming"},
       {"label": "Regulatory Close",  "date": "TBD",                "status": "future"},
       {"label": "Expected Close",    "date": "Q3 2026",            "status": "future"}
     ],
@@ -171,6 +174,29 @@ results = [
       ],
       "financing": [],
       "latest_news": [
+        {
+          "fact": (
+            "Mar 26, 2026 — Warner Bros. Discovery set April 23, 2026 as the date for its special shareholder meeting "
+            "to approve the merger with Paramount Skydance. Record date for voting eligibility was March 20, 2026. "
+            "A 'yes' vote by WBD shareholders is a required closing condition."
+          ),
+          "hedged": False,
+          "article_source": "PRNewswire (WBD press release)",
+          "article_url": "https://www.prnewswire.com/news-releases/warner-bros-discovery-sets-shareholder-meeting-date-of-april-23-2026-to-approve-transaction-with-paramount-skydance-302726244.html",
+          "published_date": "Thu, 26 Mar 2026"
+        },
+        {
+          "fact": (
+            "Mar 18, 2026 — DOJ Acting Assistant Attorney General Omeed Assefi stated the review of the Paramount/WBD "
+            "merger is 'not political' and 'absolutely not' being expedited for political reasons. Assefi said the DOJ "
+            "will 'take as long as we need' to complete the review, pushing back on claims that the Trump administration "
+            "was fast-tracking approvals for political allies."
+          ),
+          "hedged": False,
+          "article_source": "US News / Reuters",
+          "article_url": "https://money.usnews.com/investing/news/articles/2026-03-18/doj-antitrust-head-says-paramount-warner-bros-deal-review-is-not-political",
+          "published_date": "Wed, 18 Mar 2026"
+        },
         {
           "fact": (
             "Mar 12, 2026 — CA AG Bonta posted on X: 'Paramount/Warner Bros is not a done deal. The California Department "
@@ -280,6 +306,8 @@ results = [
     },
 
     "articles": [
+      {"title": "Warner Bros. Discovery Sets Shareholder Meeting Date of April 23, 2026 to Approve Transaction With Paramount Skydance", "link": "https://www.prnewswire.com/news-releases/warner-bros-discovery-sets-shareholder-meeting-date-of-april-23-2026-to-approve-transaction-with-paramount-skydance-302726244.html", "source": "PRNewswire", "published": "Thu, 26 Mar 2026"},
+      {"title": "DOJ Antitrust Head Says Paramount-Warner Bros. Deal Review Is Not Political", "link": "https://money.usnews.com/investing/news/articles/2026-03-18/doj-antitrust-head-says-paramount-warner-bros-deal-review-is-not-political", "source": "US News / Reuters", "published": "Wed, 18 Mar 2026"},
       {"title": "California AG Cites Antitrust Concerns Over Paramount-WBD Merger: EXCLU", "link": "https://deadline.com/2026/03/california-attorney-general-antitrust-paramount-warner-deal-1236745088/", "source": "Deadline", "published": "Thu, 12 Mar 2026"},
       {"title": "'An Antitrust Disaster': Democrats Decry Path Clearing for WBD Merger With Trump-Allied Paramount", "link": "https://time.com/7381536/paramount-warner-netflix-larry-david-ellison-donald-trump-democrats-reactions/", "source": "Time", "published": "Fri, 27 Feb 2026"},
       {"title": "Warner Bros to Engage With Paramount but Recommends Netflix Deal at March 20 Shareholder Vote", "link": "https://variety.com/2026/film/news/warner-bros-discovery-paramount-talks-netflix-shareholder-vote-1236665083/", "source": "Variety", "published": "Tue, 17 Feb 2026"},
@@ -291,7 +319,7 @@ results = [
       {"title": "Warner Bros. Discovery signs merger agreement with Paramount Skydance", "link": "https://www.nbcnews.com/business/media/warner-bros-discovery-signs-merger-agreement-paramount-skydance-rcna261035", "source": "NBC News", "published": "Fri, 27 Feb 2026"},
       {"title": "Adam Schiff Says Paramount-WBD Merger 'Must Be Subject to the Highest Levels of Scrutiny'", "link": "https://www.thewrap.com/media-platforms/politics/paramount-warner-bros-discovery-merger-adam-schiff-scrutiny/", "source": "The Wrap", "published": "Fri, 27 Feb 2026"},
     ],
-    "last_updated": "2026-03-13T12:00:00Z"
+    "last_updated": "2026-03-27T12:00:00Z"
   },
 
   # ══════════════════════════════════════════════════════════════
@@ -496,7 +524,7 @@ results = [
       {"title": "Engie Raises 3 Billion Euros to Finalize UK Power Networks Acquisition", "link": "https://www.marketscreener.com/news/engie-raises-3-billion-euros-to-finalize-uk-power-networks-acquisition-ce7e5cdcdd8cf620", "source": "MarketScreener", "published": "Mon, 02 Mar 2026"},
       {"title": "ENGIE announces acquisition of UK Power Networks (press release)", "link": "https://en.newsroom.engie.com/news/engie-announces-the-acquisition-of-uk-power-networks-uk-s-best-in-class-electricity-distribution-network-42503-314df.html", "source": "ENGIE Newsroom", "published": "Wed, 25 Feb 2026"},
     ],
-    "last_updated": "2026-03-13T12:00:00Z"
+    "last_updated": "2026-03-27T12:00:00Z"
   }
 ]
 
